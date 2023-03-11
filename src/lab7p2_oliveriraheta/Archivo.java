@@ -4,16 +4,25 @@ import java.io.Serializable;
 
 public class Archivo implements Serializable{
 
-    private String name, link,extension;
+    private String name, link,extension,lugar;
     private int tamanio;
 
-    public Archivo(String name, String link, String extension, int tamanio) {
+    public Archivo(String name, String link, String extension, int tamanio,String lugar) {
         this.name = name;
         this.link = link;
         this.extension = extension;
         this.tamanio = tamanio;
+        this.lugar = lugar;
     }
 
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+    
     public Archivo() {
     }
 

@@ -5,16 +5,25 @@ import java.util.ArrayList;
 
 public class Carpeta implements Serializable {
 
-    private String name, link;
+    private String name, link,lugar;
     private ArrayList<Archivo> listaArchivos = new ArrayList();
     private ArrayList<Carpeta> listaCarpetas = new ArrayList();
 
     public Carpeta() {
     }
 
-    public Carpeta(String name, String link) {
+    public String getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(String lugar) {
+        this.lugar = lugar;
+    }
+    
+    public Carpeta(String name, String link,String lugar) {
         this.name = name;
         this.link = link;
+        this.lugar = lugar;
     }
 
     public String getName() {
