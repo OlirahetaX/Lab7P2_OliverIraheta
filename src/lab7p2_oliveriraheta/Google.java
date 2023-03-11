@@ -3,6 +3,7 @@ package lab7p2_oliveriraheta;
 import java.util.ArrayList;
 import java.util.Random;
 import javax.swing.JComboBox;
+import javax.swing.*;
 import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -50,7 +51,6 @@ public class Google extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
         jPanel2 = new javax.swing.JPanel();
-        jl_textbar = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
 
         mi_crearArchivo.setBackground(new java.awt.Color(255, 255, 204));
@@ -162,12 +162,12 @@ public class Google extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 204, 255));
         jPanel2.setLayout(null);
-        jPanel2.add(jl_textbar);
-        jl_textbar.setBounds(80, 20, 440, 30);
 
         jProgressBar1.setBackground(new java.awt.Color(255, 255, 255));
         jProgressBar1.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jProgressBar1.setForeground(new java.awt.Color(255, 51, 51));
         jProgressBar1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jProgressBar1.setVerifyInputWhenFocusTarget(false);
         jPanel2.add(jProgressBar1);
         jProgressBar1.setBounds(20, 10, 558, 48);
 
@@ -310,20 +310,23 @@ public class Google extends javax.swing.JFrame {
             if (nodo_seleccionado.getUserObject() instanceof Carpeta) {
                 link = ((Carpeta) nodo_seleccionado.getUserObject()).getLink();
             }
-            jl_textbar.setText(link);
+            jProgressBar1.setStringPainted(true);
+            jProgressBar1.setString(link);
             pm_miunidad.show(evt.getComponent(), evt.getX(), evt.getY());
         }
     }//GEN-LAST:event_jTree1MouseClicked
 
     private void mi_descargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_descargarActionPerformed
-        int tamanio;
+        tam = 0;
         if (nodo_seleccionado.getUserObject() instanceof Archivo) {
-            
-        }else if (nodo_seleccionado.getUserObject() instanceof Carpeta) {
-            tam=0;
+            tam = ((Archivo) nodo_seleccionado.getUserObject()).getTamanio();
+        } else if (nodo_seleccionado.getUserObject() instanceof Carpeta) {
             tamanio(nodo_seleccionado.getUserObject());
-            System.out.println(tam+1000);
         }
+
+        hiloBar hilo1 = new hiloBar(jProgressBar1, tam);
+        Thread proceso1 = new Thread(hilo1);
+        proceso1.start();
     }//GEN-LAST:event_mi_descargarActionPerformed
 
     /**
@@ -375,7 +378,6 @@ public class Google extends javax.swing.JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator3;
     private javax.swing.JTree jTree1;
     private javax.swing.JDialog jd_jtree;
-    private javax.swing.JLabel jl_textbar;
     private javax.swing.JTree jt_tree2;
     private javax.swing.JMenuItem mi_CrearCarpeta;
     private javax.swing.JMenuItem mi_crearArchivo;
@@ -398,19 +400,19 @@ public class Google extends javax.swing.JFrame {
     boolean q;//archivo/carpeta
     DefaultMutableTreeNode nodo_seleccionado;
     int tam;
-    
-    private void tamanio(Object o){
-        for (int i = 0; i < ((Carpeta)o).getListaCarpetas().size(); i++) {
+
+    private void tamanio(Object o) {
+        for (int i = 0; i < ((Carpeta) o).getListaCarpetas().size(); i++) {
             //System.out.println(i);    
-            tamanio(((Carpeta)o).getListaCarpetas().get(i) );
-                
+            tamanio(((Carpeta) o).getListaCarpetas().get(i));
+
         }
-        for (int i = 0; i < ((Carpeta)o).getListaArchivos().size(); i++) {
+        for (int i = 0; i < ((Carpeta) o).getListaArchivos().size(); i++) {
             System.out.println(i);
-            tam+=((Carpeta)o).getListaArchivos().get(i).getTamanio();
+            tam += ((Carpeta) o).getListaArchivos().get(i).getTamanio();
         }
-   
-    } 
+
+    }
 
     private String LinkGenerar(int cant) {
         String caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -439,6 +441,7 @@ public class Google extends javax.swing.JFrame {
             miunidad.add(la);
 
         }
+
         admCarpeta ac = new admCarpeta("./Carpetas.ay");
         ac.cargarArchivo();
         carpetas = ac.getListaCarpeta();
